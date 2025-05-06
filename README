@@ -1,0 +1,25 @@
+Hola profesor como esta?
+
+Pasos para compilar el proyecto:
+
+1ero navegar a la ruta raiz y ejecutar
+
+- docker-compose up --build
+
+2do Configurar el MongCompass con la siguiente ruta
+mongodb://admin:password@localhost:27017/
+
+3ro Compprobacion en el Postman
+
+- GET http://localhost:8080/api/users/ID_DEL_USUARIO
+- POST http://localhost:8080/api/users
+  {
+  "name": "Pedro jode",
+  "email": "pedro@ejemplo.com"
+  }
+- PUT http://localhost:8080/api/users/ID_DEL_USUARIO
+  {
+  "name": "Pedro editado",
+  "email": "editado"
+  }
+- DELETE http://localhost:8080/api/users/ID_DEL_USUARIO

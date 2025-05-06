@@ -1,28 +1,31 @@
 package main
 
 import (
-	"context"
 	"log"
-	"time"
 
-	"github.com/elfaldiajr/tarea-DevOps/internal/db"
+	controller "github.com/elfaldiajr/tarea-DevOps/internal/controller"
+	repository "github.com/elfaldiajr/tarea-DevOps/internal/repository"
+	service "github.com/elfaldiajr/tarea-DevOps/internal/service"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	client, err := db.ConnectDB()
+	userRepo, err := repository.NewUserRepository()
 	if err != nil {
-		log.Fatalf("Error al conectar a la base de datos: %v", err)
+		log.Fatalf("Error al inicializar el repositorio: %v", err)
 	}
 
-	defer db.DisconnectDB(client)
+	userService := service.NewUserService(userRepo)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+	userController := controller.NewUserController(userService)
 
-	err = client.Ping(ctx, nil)
-	if err != nil {
-		log.Fatalf("Error al verificar la conexión: %v", err)
+	router := gin.Default()
+
+	userController.RegisterRoutes(router)
+
+	// Iniciar el servidor
+	log.Println("Servidor iniciado en http://localhost:8080")
+	if err := router.Run(":8080"); err != nil {
+		log.Fatalf("Error al iniciar el servidor: %v", err)
 	}
-
-	log.Println("Conexión exitosa a MongoDB")
 }
